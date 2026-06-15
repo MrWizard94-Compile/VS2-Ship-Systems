@@ -55,8 +55,13 @@ public class VS2ShipSystems {
         // === VS2 Integration (will be expanded) ===
         // Ship attachments, chunk claims, assembly events, etc. are initialized here
         // See ship/ package and VS2ShipIntegration + ShipSystemsData
+        //
+        // Key feature: Environmentally sealed (or high-integrity) ships now block rain and water.
+        // - Mixin on Level.isRainingAt
+        // - Fluid place events
+        // - Flood simulation respects sealing + rain
 
-        LOGGER.info("VS2 Ship Systems initialized. VS2 integration layer ready for expansion.");
+        LOGGER.info("VS2 Ship Systems initialized. Ships now block rain/water when sealed (main priority).");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

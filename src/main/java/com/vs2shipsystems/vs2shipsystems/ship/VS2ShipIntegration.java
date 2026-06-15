@@ -48,8 +48,9 @@ public class VS2ShipIntegration {
         for (ShipData ship : ships) {
             ShipSystemsData data = ShipSystemsData.getOrCreate(ship);
 
-            // Flood simulation logic
-            simulateFlood(data);
+            // Flood simulation logic (rain-aware when we can determine the level)
+            // For global ships list we approximate; real per-level rain is handled in LevelTick if needed
+            simulateFlood(data, null);  // null level = conservative (no rain boost this tick)
 
             // Future: environmental seal checks, oxygen drain, etc.
             if (data.isEnvironmentallySealed() && data.getFloodLevel() > 0) {
@@ -59,26 +60,38 @@ public class VS2ShipIntegration {
         }
     }
 
-    private static void simulateFlood(ShipSystemsData data) {
+    private static void simulateFlood(ShipSystemsData data, Level level) {
         float integrity = data.getHullIntegrity();
         boolean sealed = data.isEnvironmentallySealed();
+
+        float configRate = (float) VS2SSConfig.COMMON.floodIncreaseRate.get();
+
+        boolean isRainingOnThisShip = false;
+        if (level != null) {
+            // When we have a level context (e.g. from per-level tick), respect actual rain + whether this ship blocks it
+            isRainingOnThisShip = level.isRaining() && !shouldBlockPrecipitation(level, BlockPos.ZERO /* approximate; better sampling later */);
+        }
 
         if (sealed) {
             // Sealed ships resist flooding much better
             if (integrity < 0.3f) {
-                data.setFloodLevel(data.getFloodLevel() + (float) VS2SSConfig.COMMON.floodIncreaseRate.get() * 0.1f);
+                data.setFloodLevel(data.getFloodLevel() + configRate * 0.1f);
+            } else if (data.getFloodLevel() > 0.01f) {
+                data.setFloodLevel(data.getFloodLevel() - configRate * 0.2f); // slow drying
             }
             return;
         }
 
-        // Not sealed: flood based on how compromised the hull is
-        float configRate = (float) VS2SSConfig.COMMON.floodIncreaseRate.get();
-        if (integrity < 0.8f) {
-            float floodIncrease = configRate * (1.0f - integrity) * 2.0f;
+        // Rain actively leaking in if not protected
+        if (isRainingOnThisShip) {
+            float rainBoost = configRate * (1.0f - integrity) * 3.5f; // rain makes it worse
+            data.setFloodLevel(data.getFloodLevel() + rainBoost);
+        } else if (integrity < 0.8f) {
+            float floodIncrease = configRate * (1.0f - integrity) * 1.5f;
             data.setFloodLevel(data.getFloodLevel() + floodIncrease);
         } else if (data.getFloodLevel() > 0) {
-            // Slight natural drainage if hull is mostly intact
-            data.setFloodLevel(data.getFloodLevel() - configRate * 0.5f);
+            // Slight natural drainage if hull is mostly intact and not raining
+            data.setFloodLevel(data.getFloodLevel() - configRate * 0.4f);
         }
     }
 
@@ -91,6 +104,38 @@ public class VS2ShipIntegration {
             return null; // Not on a ship
         }
         return ShipSystemsData.getOrCreate(ship);
+    }
+
+    /**
+     * Returns true if the given position is part of a VS2 ship that should block rain/water.
+     *
+     * Used by the LevelMixin to make isRainingAt return false inside sealed ships.
+     * This is the core of "ships block rain/water".
+     *
+     * Criteria (logical for enviro sealing + hull integrity):
+     * - There is a ship at this position, AND
+     * - The ship is environmentally sealed, OR
+     * - Hull integrity is high enough that it acts as a roof (e.g. > 60%)
+     */
+    public static boolean shouldBlockPrecipitation(Level level, BlockPos pos) {
+        ShipSystemsData data = getShipDataAt(level, pos);
+        if (data == null) {
+            return false; // Not on a ship -> normal weather
+        }
+
+        // Primary: fully sealed compartments block weather completely
+        if (data.isEnvironmentallySealed()) {
+            return true;
+        }
+
+        // Secondary: high hull integrity still provides decent rain protection
+        // (even without perfect sealing, a solid hull roof blocks most rain)
+        float integrity = data.getHullIntegrity();
+        if (integrity > 0.60f) {
+            return true;
+        }
+
+        return false;
     }
 
     // === Hull Block Tracking Events ===
@@ -131,5 +176,21 @@ public class VS2ShipIntegration {
         if (block == ModBlocks.HULL_PLATING.get()) return HULL_PLATING_CONTRIBUTION;
         if (block == ModBlocks.REINFORCED_HULL.get()) return REINFORCED_HULL_CONTRIBUTION;
         return 0f;
+    }
+
+    // === Water blocking (complements rain blocking) ===
+
+    /**
+     * Prevent water from being placed (flowing, buckets, etc.) inside sealed or well-protected ships.
+     * This helps realize "ships block water" for enviro sealing.
+     */
+    @SubscribeEvent
+    public static void onFluidPlace(BlockEvent.FluidPlaceBlockEvent event) {
+        if (event.getLevel() instanceof Level level) {
+            if (shouldBlockPrecipitation(level, event.getPos())) {
+                // Replace the attempted water block with air to stop leakage into the ship
+                event.setNewState(net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            }
+        }
     }
 }

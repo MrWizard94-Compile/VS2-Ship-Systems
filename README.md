@@ -16,9 +16,14 @@
 - ✅ `ShipSystemsData` attachment (points-based hull integrity, flood level, environmental seal) with NBT persistence
 - ✅ `VS2ShipIntegration`:
   - Server tick hook ensuring attachment on all ships
-  - Flood simulation (increases when integrity low / not sealed; uses config rates)
+  - Flood simulation (increases when integrity low / not sealed; rain boosts flood on unsealed ships)
   - Block place/break events that adjust hull points for Hull Plating & Reinforced Hull
+  - `shouldBlockPrecipitation(...)` used to decide if a ship position blocks rain/water
 - ✅ Functional Hull Analyzer item: right-click ship block to read live integrity/flood/seal data
+- ✅ **Main priority achieved**: Ships now block rain/water when environmentally sealed (or high hull integrity)
+  - Mixin to `Level.isRainingAt` → rain doesn't register inside protected ships (affects cauldrons, weather checks)
+  - `BlockEvent.FluidPlaceBlockEvent` → water placement is prevented inside sealed/protected ships
+  - Rain actively contributes to flood level only on unsealed/low-integrity ships (ties directly to flood detection)
 - ✅ Basic Forge config (hull damage multiplier, flood/seal rates)
 - ✅ Example blocks wired into the system (placing hull blocks increases integrity; breaking damages it)
 

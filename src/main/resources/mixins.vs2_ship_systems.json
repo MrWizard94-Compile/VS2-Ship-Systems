@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.vs2shipsystems.vs2shipsystems.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "mixins.vs2_ship_systems.refmap.json",
+  "mixins": [
+    "LevelMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

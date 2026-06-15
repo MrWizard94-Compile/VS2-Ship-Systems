@@ -4,6 +4,8 @@ plugins {
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    // Mixin support for advanced ship features like blocking rain/water inside sealed ships
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
 version = mod_version
@@ -179,6 +181,10 @@ dependencies {
     // The 'api' artifact is usually enough for compile-time usage.
     implementation fg.deobf("org.valkyrienskies.core:api:${vscore_version}")
 
+    // Mixin for rain/water blocking on ships (enviro sealing)
+    implementation 'org.spongepowered:mixin:0.8.5'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5'
+
     // Example of optional mod dependency (uncomment and adjust as needed)
     // modImplementation fg.deobf("maven.modrinth:clockwork:...")
 }
@@ -211,7 +217,9 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : mod_authors,
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                // Mixin config for rain/water blocking
+                "MixinConfigs": "mixins.vs2_ship_systems.json"
         ])
     }
 }
