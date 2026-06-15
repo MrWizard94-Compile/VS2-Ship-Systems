@@ -1,0 +1,18 @@
+{
+  "itemGroup.vs2_ship_systems": "VS2 Ship Systems",
+
+  "block.vs2_ship_systems.hull_plating": "Hull Plating",
+  "block.vs2_ship_systems.reinforced_hull": "Reinforced Hull",
+  "block.vs2_ship_systems.flood_detector": "Flood Detector",
+  "block.vs2_ship_systems.airlock_door": "Airlock Door",
+  "block.vs2_ship_systems.environmental_sealer": "Environmental Sealer",
+
+  "item.vs2_ship_systems.hull_analyzer": "Hull Analyzer",
+  "item.vs2_ship_systems.sealant_canister": "Sealant Canister",
+
+  "gui.vs2_ship_systems.hull_integrity": "Hull Integrity: %s%%",
+  "gui.vs2_ship_systems.flood_level": "Flood Level: %s%%",
+
+  "message.vs2_ship_systems.hull_breach": "Hull breach detected!",
+  "message.vs2_ship_systems.compartment_sealed": "Compartment sealed."
+}

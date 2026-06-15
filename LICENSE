@@ -1,0 +1,10 @@
+All Rights Reserved
+
+Copyright (c) 2026 VS2 Ship Systems contributors
+
+This software is provided as a skeleton / starting point for a Minecraft mod.
+You are free to use, modify, and distribute derivative works according to the license
+you choose in gradle.properties (currently "All Rights Reserved").
+
+If you decide to open-source this project, replace this file with your chosen license
+(e.g. MIT, LGPL-3.0, Apache-2.0) and update the mod_license property.
