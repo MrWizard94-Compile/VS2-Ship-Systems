@@ -2,6 +2,10 @@
 
 **VS2 Ship Systems** is a Minecraft Forge 1.20.1 mod that adds advanced ship systems and survival mechanics on top of [Valkyrien Skies 2](https://modrinth.com/mod/valkyrien-skies).
 
+**Repository:** https://github.com/MrWizard94-Compile/VS2-Ship-Systems.git
+
+> **Note:** This repo was initialized with the complete Forge 1.20.1 mod skeleton on 2026-06-14.
+
 ## Planned Features
 
 - **Hull Integrity**: Track and simulate structural damage to ships. Breaches, leaks, repair mechanics.
