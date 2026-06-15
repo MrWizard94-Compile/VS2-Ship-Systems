@@ -17,7 +17,11 @@ bin/
 out/
 
 # VS Code
-.vscode/
+# We commit project-level VS Code configuration (.vscode/extensions.json, launch.json, tasks.json, etc.)
+# but you can still ignore personal settings if you want:
+# .vscode/settings.json
+# .vscode/launch.json
+# .vscode/tasks.json
 
 # MacOS
 .DS_Store
