@@ -20,9 +20,9 @@ More features will be added as the project develops.
 
 ### Prerequisites
 
-- JDK 17 (Temurin recommended)
-- IntelliJ IDEA (recommended) or Eclipse
-- Git (optional)
+- **JDK 17** (Temurin / Eclipse Adoptium recommended)
+- Git
+- **Visual Studio Code** (this project is optimized for VS Code)
 
 ### Getting the Gradle Wrapper
 
@@ -42,19 +42,36 @@ The wrapper scripts (`gradlew` + `gradlew.bat`) and `gradle/wrapper/gradle-wrapp
 
 (You can also copy the entire `gradle/` folder + scripts from the MDK if you prefer a fresh copy.)
 
-### Importing into IDE
+### VS Code Setup (Primary Development Environment)
 
-**IntelliJ IDEA**:
+This project is set up with first-class VS Code support.
 
-1. `File` > `Open` > select this folder (the one containing `build.gradle`).
-2. When prompted, accept to import as Gradle project.
-3. After import finishes, run the Gradle task: `genIntellijRuns` (or right-click in Gradle panel).
-4. Set your project's SDK to Java 17 if not auto-detected.
+1. **Open the folder** in VS Code (`File > Open Folder` → select the project root).
 
-**Other IDEs**:
+2. **Install recommended extensions**  
+   When you open the project, VS Code should prompt you to install the recommended extensions.  
+   Or manually install:
+   - "Extension Pack for Java" (by Microsoft)
+   - "Gradle for Java"
+   - "Language Support for Java™ by Red Hat"
 
-- Eclipse: Run `gradlew genEclipseRuns`
-- VS Code: Use the Gradle for Java extension + `genVSCodeRuns`
+3. **Generate VS Code run configurations** (important first step)  
+   Open the integrated terminal (`` Ctrl + ` ``) and run:
+   ```powershell
+   .\gradlew genVSCodeRuns
+   ```
+   This creates proper debug launch configurations for Client, Server, and Data Generation.
+
+4. **Run the mod**
+   - Use the **Run and Debug** panel (left sidebar) → choose "Minecraft Client"
+   - Or use the provided tasks (`Ctrl+Shift+P` → "Tasks: Run Task" → "Run Client")
+
+**Pro tip for supervisors:** Use the built-in Tasks (`Ctrl+Shift+P` → Tasks) for `Build Mod`, `Run Client`, `Run Server`, and `Clean + Build`.
+
+### Other IDEs (if needed)
+
+- Eclipse: `./gradlew genEclipseRuns`
+- IntelliJ: `./gradlew genIntellijRuns` (still works, just not the primary target)
 
 ### Building
 
@@ -74,17 +91,34 @@ The built jar will be in `build/libs/vs2_ship_systems-*.jar`.
 ./gradlew runServer
 ```
 
-## Adding VS2 as a Dependency
+## Adding / Updating VS2 as a Dependency
 
 VS2 is already declared in `gradle.properties` (`vs2_version`) and `build.gradle`.
 
-- Update the version numbers in `gradle.properties` when a new VS2 release drops.
-- Re-run Gradle (refresh) after changing versions.
-- The mod declares `valkyrienskies` as a **mandatory** dependency in `mods.toml`.
+**To update VS2:**
+
+1. Edit `gradle.properties` → change `vs2_version` and `vscore_version`.
+2. In VS Code, run the Gradle task **"Refresh Gradle Projects"** (or run `./gradlew --refresh-dependencies`).
+3. The mod already declares `valkyrienskies` as a **mandatory** dependency in `mods.toml`.
+
+## Working Style (Director + AI)
+
+This project is developed in a **supervisory director + AI pair-programming** style:
+
+- The director (you) gives high-level direction and priorities.
+- The AI (Grok) does the detailed implementation, refactoring, debugging, and structure work.
+- We keep the codebase clean, well-commented, and easy to understand at a glance.
+
+When giving direction, high-level goals work best, for example:
+- "Start building the hull integrity system. Focus on attaching data to ships first."
+- "Create the basic registration classes and a simple flood detector block."
+- "Add a config for hull integrity thresholds."
 
 ## Contributing / Roadmap
 
-This is currently a skeleton. Issues and PRs are welcome once the project has more structure.
+This is currently a skeleton. The AI will expand it based on direction.
+
+Current high-level roadmap lives in the issues and this README. Feel free to open discussions.
 
 ## License
 
