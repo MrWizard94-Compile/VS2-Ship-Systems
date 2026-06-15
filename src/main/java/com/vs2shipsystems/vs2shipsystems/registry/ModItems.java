@@ -1,6 +1,7 @@
 package com.vs2shipsystems.vs2shipsystems.registry;
 
 import com.vs2shipsystems.vs2shipsystems.VS2ShipSystems;
+import com.vs2shipsystems.vs2shipsystems.item.HullAnalyzerItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,7 +30,7 @@ public class ModItems {
 
     // Tools / utility items
     public static final RegistryObject<Item> HULL_ANALYZER = ITEMS.register("hull_analyzer",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new HullAnalyzerItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> SEALANT_CANISTER = ITEMS.register("sealant_canister",
             () -> new Item(new Item.Properties().stacksTo(16)));

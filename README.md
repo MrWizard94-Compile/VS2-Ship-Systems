@@ -12,19 +12,23 @@
 
 - ✅ Full Forge 1.20.1 + VS2 dependency skeleton
 - ✅ VS Code optimized (extensions, tasks, launch configs)
-- ✅ Deferred registration for Blocks, Items, Creative Tab
-- ✅ Foundational `ShipSystemsData` attachment for per-ship state (hull integrity, flood level, sealing)
-- ✅ `VS2ShipIntegration` with server tick hook to ensure data is attached to all loaded ships
-- ✅ Basic example blocks (Hull Plating, Reinforced Hull, Flood Detector, Airlock, Sealer)
-- ✅ Simple Forge config system
+- ✅ Deferred registration for Blocks, Items, Creative Tab + custom HullAnalyzerItem
+- ✅ `ShipSystemsData` attachment (points-based hull integrity, flood level, environmental seal) with NBT persistence
+- ✅ `VS2ShipIntegration`:
+  - Server tick hook ensuring attachment on all ships
+  - Flood simulation (increases when integrity low / not sealed; uses config rates)
+  - Block place/break events that adjust hull points for Hull Plating & Reinforced Hull
+- ✅ Functional Hull Analyzer item: right-click ship block to read live integrity/flood/seal data
+- ✅ Basic Forge config (hull damage multiplier, flood/seal rates)
+- ✅ Example blocks wired into the system (placing hull blocks increases integrity; breaking damages it)
 
 ## Planned Features (High Level)
 
-- **Hull Integrity**: Track and simulate structural damage to ships. Breaches, leaks, repair mechanics.
-- **Flood Detection**: Realistic flooding of ship compartments when hull is breached. Water levels, pumps, etc.
-- **Environmental Sealing**: Pressurized rooms, airlocks, oxygen / life support systems.
-- **Ship Systems UI / HUD**: Displays for integrity, flood status, seal status.
-- **Integration with VS2 ships**: Uses ship attachments, shipyard events, chunk claims, etc.
+- **Hull Integrity**: (Core implemented) Points-based tracking from hull blocks. Damage from breaks/collisions. Repair via placement/sealant.
+- **Flood Detection**: (Basic simulation active) Flood level rises/falls based on integrity + seal status. Future: compartment simulation, water placement inside ship volumes, pumps.
+- **Environmental Sealing**: (Flag implemented) Prevents/reduces flooding. Future: airlocks, oxygen, pressure per section using VS2 ship chunks.
+- **Ship Systems UI / HUD**: Future - displays, perhaps using VS2 ship overlays or simple item tooltips/GUI.
+- **Deeper VS2 Integration**: Ship assembly events, better physics interaction (e.g. flood adding mass/drag), redstone ship systems.
 
 More features will be added as the project develops.
 
