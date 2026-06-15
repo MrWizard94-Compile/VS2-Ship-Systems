@@ -1,6 +1,13 @@
 package com.vs2shipsystems.vs2shipsystems;
 
 import com.mojang.logging.LogUtils;
+import com.vs2shipsystems.vs2shipsystems.config.VS2SSConfig;
+import com.vs2shipsystems.vs2shipsystems.registry.ModBlocks;
+import com.vs2shipsystems.vs2shipsystems.registry.ModCreativeTabs;
+import com.vs2shipsystems.vs2shipsystems.registry.ModItems;
+import com.vs2shipsystems.vs2shipsystems.ship.VS2ShipIntegration;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -32,21 +39,31 @@ public class VS2ShipSystems {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(VS2ShipIntegration.class);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        // TODO: Register DeferredRegisters here for Blocks, Items, BlockEntities, etc.
-        // Example:
-        // ModBlocks.BLOCKS.register(modEventBus);
-        // ModItems.ITEMS.register(modEventBus);
+        // === Registration ===
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
+        ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
 
-        LOGGER.info("VS2 Ship Systems initialized. VS2 integration coming soon!");
+        // Config
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, VS2SSConfig.COMMON_SPEC);
+
+        // === VS2 Integration (will be expanded) ===
+        // Ship attachments, chunk claims, assembly events, etc. are initialized here
+        // See ship/ package and VS2ShipIntegration + ShipSystemsData
+
+        LOGGER.info("VS2 Ship Systems initialized. VS2 integration layer ready for expansion.");
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         // Some common setup code
         LOGGER.info("VS2 Ship Systems common setup complete.");
-        // TODO: Register VS2 ship attachments, events, network packets, etc.
+
+        // VS2-specific one-time setup (network, capabilities, attachment registration if needed)
+        // Most VS2 integration happens via events and lazy attachment access on ships.
     }
 }

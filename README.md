@@ -5,8 +5,20 @@
 **Repository:** https://github.com/MrWizard94-Compile/VS2-Ship-Systems.git
 
 > **Note:** This repo was initialized with the complete Forge 1.20.1 mod skeleton on 2026-06-14.
+>
+> **Current Status (as of latest commit):** Basic project structure, registration system, and foundational VS2 `ShipSystemsData` attachment + integration layer are in place. Ready for system-specific logic (hull, flood, sealing).
 
-## Planned Features
+## Current Progress
+
+- ✅ Full Forge 1.20.1 + VS2 dependency skeleton
+- ✅ VS Code optimized (extensions, tasks, launch configs)
+- ✅ Deferred registration for Blocks, Items, Creative Tab
+- ✅ Foundational `ShipSystemsData` attachment for per-ship state (hull integrity, flood level, sealing)
+- ✅ `VS2ShipIntegration` with server tick hook to ensure data is attached to all loaded ships
+- ✅ Basic example blocks (Hull Plating, Reinforced Hull, Flood Detector, Airlock, Sealer)
+- ✅ Simple Forge config system
+
+## Planned Features (High Level)
 
 - **Hull Integrity**: Track and simulate structural damage to ships. Breaches, leaks, repair mechanics.
 - **Flood Detection**: Realistic flooding of ship compartments when hull is breached. Water levels, pumps, etc.
