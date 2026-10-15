@@ -1,0 +1,29 @@
+name: Constitution adoption
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  adoption:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+      - uses: actions/checkout@v4
+        with:
+          repository: MrWizard94-Compile/Agents-Constitution
+          ref: e24f4f96c5e400ed731c2aad7bf43fd407b4f3e1
+          path: constitution
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate pinned Constitution source
+        run: python constitution/tools/validate-source.py
+      - name: Audit project governance consumers
+        run: python constitution/tools/check-adoption.py project
